@@ -55,11 +55,10 @@ class UmamiLogger {
             title: document.title,
             url: overrideUrl || window.location.pathname,
             website: this.config?.websiteId,
-            type: 'pageview'
         };
 
         // Send the data
-        this.sendData(payload);
+        this.sendData({ payload, type: 'pageview' });
     }
 
     /**
@@ -82,11 +81,10 @@ class UmamiLogger {
             website: this.config.websiteId,
             name: eventName,
             data: eventData,
-            type: 'event'
         };
 
         // Send the data
-        this.sendData(payload);
+        this.sendData({ payload, type: 'event' });
     }
 
     /**
