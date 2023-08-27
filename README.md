@@ -1,6 +1,6 @@
 # Umami Logger
 
-![npm](https://img.shields.io/npm/v/umami-logger)
+![npm](https://img.shields.io/npm/v/umami-logger-typescript)
 
 ## Description
 
