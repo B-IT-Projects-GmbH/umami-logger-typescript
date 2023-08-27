@@ -1,20 +1,29 @@
 import axios from 'axios';
 
+// Configuration interface for Umami
 interface UmamiConfig {
     baseUrl: string;
     websiteId: string;
 }
 
+// Generic interface for event data
 interface EventData {
     [key: string]: any;
 }
 
 class UmamiLogger {
+    // Singleton instance
     private static instance: UmamiLogger;
+
+    // Configuration object
     private config?: UmamiConfig;
 
+    // Private constructor for Singleton pattern
     private constructor() {}
 
+    /**
+     * Get or create the singleton instance.
+     */
     static getInstance(): UmamiLogger {
         if (!UmamiLogger.instance) {
             UmamiLogger.instance = new UmamiLogger();
@@ -22,27 +31,47 @@ class UmamiLogger {
         return UmamiLogger.instance;
     }
 
+    /**
+     * Initialize logger with configuration.
+     *
+     * @param config - Umami configuration object
+     */
     initialize(config: UmamiConfig): void {
         this.config = config;
     }
 
-    async trackPageView(overrideUrl?: string) {
+    /**
+     * Track a page view.
+     *
+     * @param overrideUrl - Optional URL to override the default
+     */
+    async trackPageView(overrideUrl?: string): Promise<void> {
+        // Create payload with browser-specific data and optional URL
         const payload = {
             hostname: window.location.hostname,
             language: navigator.language,
             referrer: document.referrer,
             screen: `${window.screen.width}x${window.screen.height}`,
             title: document.title,
-            url: overrideUrl || window.location.pathname,  // Use overrideUrl if provided
+            url: overrideUrl || window.location.pathname,
             website: this.config?.websiteId,
             type: 'pageview'
         };
+
+        // Send the data
         this.sendData(payload);
     }
 
-    async logEvent(eventName: string, eventData: EventData = {}) {
+    /**
+     * Log a custom event.
+     *
+     * @param eventName - Name of the event
+     * @param eventData - Optional data to attach to the event
+     */
+    async logEvent(eventName: string, eventData: EventData = {}): Promise<void> {
         if (!this.config || !eventName) return;
 
+        // Create payload with event name and data
         const payload = {
             hostname: window.location.hostname,
             language: navigator.language,
@@ -55,11 +84,19 @@ class UmamiLogger {
             data: eventData,
             type: 'event'
         };
+
+        // Send the data
         this.sendData(payload);
     }
 
-    private async sendData(payload: any) {
+    /**
+     * Send data to Umami.
+     *
+     * @param payload - Data to send
+     */
+    private async sendData(payload: any): Promise<void> {
         const apiUrl = `${this.config?.baseUrl}/api/send`;
+
         try {
             await axios.post(apiUrl, payload);
         } catch (error) {
