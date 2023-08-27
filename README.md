@@ -18,13 +18,13 @@ Umami Logger is a configurable event logging package for [Umami Analytics](https
 Install the package using npm:
 
 ```bash
-npm install umami-logger
+npm install umami-logger-typescript
 ```
 
 Or using yarn:
 
 ```bash
-yarn add umami-logger
+yarn add umami-logger-typescript
 ```
 
 ## Usage
@@ -32,7 +32,7 @@ yarn add umami-logger
 First, initialize the Umami Logger with your configuration:
 
 ```typescript
-import Umami from 'umami-logger';
+import Umami from 'umami-logger-typescript';
 
 Umami.initialize({
     baseUrl: 'https://umami.is',
