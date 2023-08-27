@@ -50,7 +50,7 @@ class UmamiLogger {
         const payload = {
             hostname: window.location.hostname,
             language: navigator.language,
-            referrer: document.referrer,
+            referrer: document.referrer || '',
             screen: `${window.screen.width}x${window.screen.height}`,
             title: document.title,
             url: overrideUrl || window.location.pathname,
@@ -75,7 +75,7 @@ class UmamiLogger {
         const payload = {
             hostname: window.location.hostname,
             language: navigator.language,
-            referrer: document.referrer,
+            referrer: document.referrer || '',
             screen: `${window.screen.width}x${window.screen.height}`,
             title: document.title,
             url: window.location.pathname,
