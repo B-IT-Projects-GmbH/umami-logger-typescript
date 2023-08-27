@@ -58,7 +58,7 @@ class UmamiLogger {
         };
 
         // Send the data
-        this.sendData({ payload: payload, type: 'pageview' });
+        this.sendData({ payload: payload, type: 'event' });
     }
 
     /**
