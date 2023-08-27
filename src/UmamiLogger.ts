@@ -26,6 +26,20 @@ class UmamiLogger {
         this.config = config;
     }
 
+    async trackPageView(overrideUrl?: string) {
+        const payload = {
+            hostname: window.location.hostname,
+            language: navigator.language,
+            referrer: document.referrer,
+            screen: `${window.screen.width}x${window.screen.height}`,
+            title: document.title,
+            url: overrideUrl || window.location.pathname,  // Use overrideUrl if provided
+            website: this.config?.websiteId,
+            type: 'pageview'
+        };
+        this.sendData(payload);
+    }
+
     async logEvent(eventName: string, eventData: EventData = {}) {
         if (!this.config || !eventName) return;
 
@@ -38,18 +52,18 @@ class UmamiLogger {
             url: window.location.pathname,
             website: this.config.websiteId,
             name: eventName,
-            data: eventData
+            data: eventData,
+            type: 'event'
         };
+        this.sendData(payload);
+    }
 
-        const apiUrl = `${this.config.baseUrl}/api/send`;
-
+    private async sendData(payload: any) {
+        const apiUrl = `${this.config?.baseUrl}/api/send`;
         try {
-            await axios.post(apiUrl, {
-                payload,
-                type: 'event',
-            });
+            await axios.post(apiUrl, payload);
         } catch (error) {
-            console.error('Error logging event:', error);
+            console.error('Error sending data:', error);
         }
     }
 }

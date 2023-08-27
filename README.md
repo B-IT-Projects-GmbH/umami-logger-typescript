@@ -62,6 +62,30 @@ Logs an event to your Umami dashboard.
 - `eventName`: The name of the event.
 - `eventData`: Additional data to attach to the event (optional).
 
+### `trackPageView(overrideUrl?: string): void`
+
+Automatically logs a page view event. This is triggered when you initialize Umami Logger.
+
+- `overrideUrl`: An optional parameter that lets you specify a custom URL for the page view event, overriding the default `window.location.pathname`.
+
+## Example for Vue Router Integration
+
+To track page views in a Vue project with Vue Router, you can use the `beforeEach` or `afterEach` hooks in your router setup:
+
+```typescript
+import VueRouter from 'vue-router';
+import Umami from 'umami-logger-typescript';
+
+const router = new VueRouter({
+  // your routes here
+});
+
+router.beforeEach((to, from, next) => {
+  Umami.trackPageView(to.path);  // Use the 'to.path' as the override URL
+  next();
+});
+```
+
 ## Author
 
 Developed by Phil0xFF, on behalf of [B.IT Projects GmbH](https://b-it-projects.de).
