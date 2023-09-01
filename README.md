@@ -81,7 +81,7 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  Umami.trackPageView(to.path);  // Use the 'to.path' as the override URL
+  Umami.trackPageView(to.path); // the to.path will override the default pathname
   next();
 });
 ```
