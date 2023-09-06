@@ -19,13 +19,13 @@ Umami Logger is a configurable event logging package for [Umami Analytics](https
 Install the package using npm:
 
 ```bash
-npm install umami-logger-typescript
+npm install @bitprojects/umami-logger-typescript
 ```
 
 Or using yarn:
 
 ```bash
-yarn add umami-logger-typescript
+yarn add @bitprojects/umami-logger-typescript
 ```
 
 ## Usage
@@ -33,7 +33,7 @@ yarn add umami-logger-typescript
 First, initialize the Umami Logger with your configuration:
 
 ```typescript
-import Umami from 'umami-logger-typescript';
+import Umami from '@bitprojects/umami-logger-typescript';
 
 Umami.initialize({
     baseUrl: 'https://umami.is',
@@ -75,7 +75,7 @@ To track page views in a Vue project with Vue Router, you can use the `beforeEac
 
 ```typescript
 import VueRouter from 'vue-router';
-import Umami from 'umami-logger-typescript';
+import Umami from '@bitprojects/umami-logger-typescript';
 
 const router = new VueRouter({
   // your routes here
