@@ -1,6 +1,6 @@
 {
   "name": "@bitprojects/umami-logger-typescript",
-  "version": "1.0.9",
+  "version": "1.0.11",
   "description": "A configurable event logging package for Umami analytics. Easily send custom events with auto-populated browser metadata.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,13 +22,13 @@
   "author": "Phil0xFF",
   "license": "MIT",
   "devDependencies": {
-    "@types/jest": "^29.5.4",
-    "jest": "^29.6.4",
-    "jest-environment-jsdom": "^29.6.4",
-    "ts-jest": "^29.1.1",
-    "typescript": "^5.2.2"
+    "@types/jest": "^29.5.14",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "ts-jest": "^29.2.6",
+    "typescript": "^5.8.2"
   },
   "dependencies": {
-    "axios": "^1.5.0"
+    "axios": "^1.8.3"
   }
 }

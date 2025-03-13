@@ -1,6 +1,7 @@
 # Umami Logger
 
-![npm](https://img.shields.io/npm/v/umami-logger-typescript)
+![npm](https://img.shields.io/npm/v/@bitprojects/umami-logger-typescript)
+![NPM Downloads](https://img.shields.io/npm/dy/%40bitprojects%2Fumami-logger-typescript)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/B-IT-Projects-GmbH/umami-logger-typescript/.github%2Fworkflows%2Fmain.yml)
 
 ## Description
