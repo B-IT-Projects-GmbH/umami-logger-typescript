@@ -4,6 +4,7 @@ import axios from 'axios';
 interface UmamiConfig {
     baseUrl: string;
     websiteId: string;
+    hostName?: string;
 }
 
 // Generic interface for event data
@@ -48,7 +49,7 @@ class UmamiLogger {
     async trackPageView(overrideUrl?: string): Promise<void> {
         // Create payload with browser-specific data and optional URL
         const payload = {
-            hostname: window.location.hostname,
+            hostname: this.config?.hostName || window.location.hostname,
             language: navigator.language,
             referrer: document.referrer || '',
             screen: `${window.screen.width}x${window.screen.height}`,
@@ -72,7 +73,7 @@ class UmamiLogger {
 
         // Create payload with event name and data
         const payload = {
-            hostname: window.location.hostname,
+            hostname: this.config?.hostName || window.location.hostname,
             language: navigator.language,
             referrer: document.referrer || '',
             screen: `${window.screen.width}x${window.screen.height}`,

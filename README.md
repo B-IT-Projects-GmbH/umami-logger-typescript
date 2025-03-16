@@ -39,8 +39,10 @@ import Umami from '@bitprojects/umami-logger-typescript';
 Umami.initialize({
     baseUrl: 'https://umami.is',
     websiteId: 'your-website-id',
+    hostName: 'your-custom-hostname', //optional
 });
 ```
+
 
 Then, you can log events like this:
 
