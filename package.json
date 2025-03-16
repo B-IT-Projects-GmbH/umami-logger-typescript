@@ -22,7 +22,7 @@
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/B-IT-Projects-GmbH/umami-logger-typescript.git"
+    "url": "git+https://github.com/B-IT-Projects-GmbH/umami-logger-typescript.git"
   },
   "author": "Phil0xFF",
   "license": "MIT",
