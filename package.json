@@ -1,6 +1,6 @@
 {
   "name": "@bitprojects/umami-logger-typescript",
-  "version": "1.1.1",
+  "version": "1.0.12",
   "description": "A configurable event logging package for Umami analytics. Easily send custom events with auto-populated browser metadata.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,6 +19,11 @@
     "axios",
     "custom events"
   ],
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/B-IT-Projects-GmbH/umami-logger-typescript.git"
+  },
   "author": "Phil0xFF",
   "license": "MIT",
   "devDependencies": {
