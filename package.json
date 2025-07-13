@@ -1,6 +1,6 @@
 {
   "name": "@bitprojects/umami-logger-typescript",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "A configurable event logging package for Umami analytics. Easily send custom events with auto-populated browser metadata.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
