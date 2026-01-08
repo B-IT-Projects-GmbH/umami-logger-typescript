@@ -4,90 +4,122 @@
 ![NPM Downloads](https://img.shields.io/npm/dy/%40bitprojects%2Fumami-logger-typescript)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/B-IT-Projects-GmbH/umami-logger-typescript/.github%2Fworkflows%2Fmain.yml)
 
-## Description
-
-Umami Logger is a configurable event logging package for [Umami Analytics](https://umami.is). It allows you to easily send custom events with automatically populated browser metadata.
-
-## Features
-
-- Easy setup with minimal configuration
-- Automatically captures common browser metadata
-- Built with TypeScript
-- Uses Axios for network requests
+A TypeScript client for [Umami Analytics](https://umami.is). Supports all tracker features including events, page views, session identification, revenue tracking, and more.
 
 ## Installation
-
-Install the package using npm:
 
 ```bash
 npm install @bitprojects/umami-logger-typescript
 ```
 
-Or using yarn:
-
-```bash
-yarn add @bitprojects/umami-logger-typescript
-```
-
-## Usage
-
-First, initialize the Umami Logger with your configuration:
+## Quick Start
 
 ```typescript
 import Umami from '@bitprojects/umami-logger-typescript';
 
 Umami.initialize({
-    baseUrl: 'https://umami.is',
+    baseUrl: 'https://your-umami-instance.com',
     websiteId: 'your-website-id',
-    hostName: 'your-custom-hostname', //optional
 });
+
+// Track page view
+Umami.trackPageView();
+
+// Track event
+Umami.trackEvent('button-click', { buttonId: 'signup' });
 ```
 
-
-Then, you can log events like this:
+## Configuration Options
 
 ```typescript
-Umami.trackEvent('some-event', { foo: 'bar' });
+Umami.initialize({
+    baseUrl: 'https://your-umami-instance.com',  // Required
+    websiteId: 'your-website-id',                 // Required
+    hostName: 'custom-hostname.com',              // Override hostname
+    tag: 'marketing-campaign',                    // Tag all events
+    domains: ['example.com', 'www.example.com'],  // Restrict to domains
+    doNotTrack: true,                             // Honor browser DNT
+    excludeSearch: true,                          // Exclude URL query params
+    excludeHash: true,                            // Exclude URL hash
+    beforeSend: (payload) => {                    // Modify/filter events
+        if (payload.url.includes('/admin')) return null;
+        return payload;
+    },
+});
 ```
 
 ## API
 
-### `initialize(config: UmamiConfig): void`
-
-Initialize the logger with your Umami configuration.
-
-- `config.baseUrl`: The base URL of your Umami instance.
-- `config.websiteId`: The website ID in your Umami dashboard.
-
-### `trackEvent(eventName: string, eventData: EventData): void`
-
-Logs an event to your Umami dashboard.
-
-- `eventName`: The name of the event.
-- `eventData`: Additional data to attach to the event (optional).
-
-### `trackPageView(overrideUrl?: string): void`
-
-Automatically logs a page view event. This is triggered when you initialize Umami Logger.
-
-- `overrideUrl`: An optional parameter that lets you specify a custom URL for the page view event, overriding the default `window.location.pathname`.
-
-## Example for Vue Router Integration
-
-To track page views in a Vue project with Vue Router, you can use the `beforeEach` or `afterEach` hooks in your router setup:
+### Page Views
 
 ```typescript
-import VueRouter from 'vue-router';
+Umami.trackPageView();
+Umami.trackPageView('/custom-path');
+```
+
+### Events
+
+```typescript
+Umami.trackEvent('signup', { plan: 'premium' });
+```
+
+### Generic Track (mirrors official `umami.track()`)
+
+```typescript
+Umami.track();                                    // Page view
+Umami.track('event-name');                        // Named event
+Umami.track('event-name', { key: 'value' });      // Event with data
+Umami.track({ url: '/custom', title: 'Custom' }); // Custom payload
+Umami.track(props => ({ ...props, url: '/new' }));// Callback
+```
+
+### Revenue Tracking
+
+```typescript
+Umami.trackRevenue('purchase', 99.99, 'USD');
+Umami.trackRevenue('purchase', 99.99, 'EUR', { productId: 'prod-123' });
+```
+
+### Session Identification
+
+```typescript
+Umami.identify('user-123');
+Umami.identify('user-123', { name: 'John', email: 'john@example.com' });
+Umami.identify({ plan: 'premium' });  // Data only
+Umami.clearIdentity();
+```
+
+### Tags
+
+```typescript
+Umami.setTag('campaign-summer');
+Umami.clearTag();
+```
+
+## Vue Router Integration
+
+```typescript
+import { createRouter } from 'vue-router';
 import Umami from '@bitprojects/umami-logger-typescript';
 
-const router = new VueRouter({
-  // your routes here
-});
+const router = createRouter({ /* routes */ });
 
-router.beforeEach((to, from, next) => {
-  Umami.trackPageView(to.path); // the to.path will override the default pathname
-  next();
+router.afterEach((to) => {
+    Umami.trackPageView(to.fullPath);
 });
+```
+
+## TypeScript
+
+All types are exported:
+
+```typescript
+import Umami, {
+    UmamiConfig,
+    UmamiPayload,
+    EventData,
+    IdentifyData
+} from '@bitprojects/umami-logger-typescript';
 ```
 
 ## Author
