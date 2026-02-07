@@ -23,18 +23,20 @@ const Umami = {
      *
      * @param eventName - Name of the event
      * @param eventData - Optional data to attach to the event
+     * @param tag - Optional tag override for this event
      */
-    trackEvent(eventName: string, eventData?: EventData): Promise<UmamiResponse | void> {
-        return UmamiLogger.getInstance().logEvent(eventName, eventData);
+    trackEvent(eventName: string, eventData?: EventData, tag?: string): Promise<UmamiResponse | void> {
+        return UmamiLogger.getInstance().logEvent(eventName, eventData, tag);
     },
 
     /**
      * Track a page view.
      *
      * @param overrideUrl - Optional URL to override the default
+     * @param tag - Optional tag override for this page view
      */
-    trackPageView(overrideUrl?: string): Promise<UmamiResponse | void> {
-        return UmamiLogger.getInstance().trackPageView(overrideUrl);
+    trackPageView(overrideUrl?: string, tag?: string): Promise<UmamiResponse | void> {
+        return UmamiLogger.getInstance().trackPageView(overrideUrl, tag);
     },
 
     /**
@@ -84,6 +86,16 @@ const Umami = {
         data?: IdentifyData
     ): Promise<UmamiResponse | void> {
         return UmamiLogger.getInstance().identify(uniqueIdOrData, data);
+    },
+
+    /**
+     * Set a distinct ID to include in all subsequent payloads.
+     * Sets the session ID without sending an identify event.
+     *
+     * @param id - Unique identifier for the user
+     */
+    setDistinctId(id: string): void {
+        UmamiLogger.getInstance().setDistinctId(id);
     },
 
     /**

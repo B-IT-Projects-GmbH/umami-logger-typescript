@@ -55,12 +55,14 @@ Umami.initialize({
 ```typescript
 Umami.trackPageView();
 Umami.trackPageView('/custom-path');
+Umami.trackPageView('/custom-path', 'variant-b'); // with per-call tag override
 ```
 
 ### Events
 
 ```typescript
 Umami.trackEvent('signup', { plan: 'premium' });
+Umami.trackEvent('click', { buttonId: 'cta' }, 'variant-b'); // with per-call tag override
 ```
 
 ### Generic Track (mirrors official `umami.track()`)
@@ -80,6 +82,17 @@ Umami.trackRevenue('purchase', 99.99, 'USD');
 Umami.trackRevenue('purchase', 99.99, 'EUR', { productId: 'prod-123' });
 ```
 
+### Distinct IDs
+
+Set a distinct ID to link all subsequent events to a specific user without sending an identify event:
+
+```typescript
+Umami.setDistinctId('user-123');
+
+// All future trackEvent and trackPageView calls will include this ID
+Umami.trackEvent('purchase', { item: 'widget' });
+```
+
 ### Session Identification
 
 ```typescript
@@ -92,8 +105,15 @@ Umami.clearIdentity();
 ### Tags
 
 ```typescript
+// Set global tag via config (see Configuration Options above)
+
+// Set/clear tag dynamically
 Umami.setTag('campaign-summer');
 Umami.clearTag();
+
+// Override tag for a specific call
+Umami.trackEvent('click', { buttonId: 'cta' }, 'variant-b');
+Umami.trackPageView('/landing', 'variant-b');
 ```
 
 ## Vue Router Integration

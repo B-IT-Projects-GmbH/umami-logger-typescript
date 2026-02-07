@@ -159,6 +159,21 @@ describe('UmamiLogger', () => {
         })
       );
     });
+
+    it('should allow per-call tag override on trackPageView', async () => {
+      mockAxiosPost.mockResolvedValue({ data: {} });
+
+      await umami.trackPageView(undefined, 'override-tag');
+
+      expect(mockAxiosPost).toHaveBeenCalledWith(
+        'https://umami.is/api/send',
+        expect.objectContaining({
+          payload: expect.objectContaining({
+            tag: 'override-tag',
+          }),
+        })
+      );
+    });
   });
 
   describe('Track Custom Events', () => {
@@ -193,6 +208,23 @@ describe('UmamiLogger', () => {
       const newUmami = UmamiLogger.getInstance();
       await newUmami.logEvent('test', { data: 'test' });
       expect(mockAxiosPost).not.toHaveBeenCalled();
+    });
+
+    it('should allow per-call tag override on logEvent', async () => {
+      mockAxiosPost.mockResolvedValue({ data: {} });
+
+      umami.initialize({ baseUrl: 'https://umami.is', websiteId: 'test-website-id', tag: 'default-tag' });
+      await umami.logEvent('click', {}, 'override-tag');
+
+      expect(mockAxiosPost).toHaveBeenCalledWith(
+        'https://umami.is/api/send',
+        expect.objectContaining({
+          payload: expect.objectContaining({
+            tag: 'override-tag',
+            name: 'click',
+          }),
+        })
+      );
     });
   });
 
@@ -338,7 +370,15 @@ describe('UmamiLogger', () => {
       await umami.identify('user-12345');
 
       expect(umami.getSessionId()).toBe('user-12345');
-      expect(mockAxiosPost).toHaveBeenCalled();
+      expect(mockAxiosPost).toHaveBeenCalledWith(
+        'https://umami.is/api/send',
+        expect.objectContaining({
+          payload: expect.objectContaining({
+            id: 'user-12345',
+          }),
+          type: 'identify',
+        })
+      );
     });
 
     it('should identify with ID and data', async () => {
@@ -353,6 +393,7 @@ describe('UmamiLogger', () => {
             id: 'user-12345',
             data: { name: 'John', email: 'john@example.com' },
           }),
+          type: 'identify',
         })
       );
     });
@@ -367,6 +408,7 @@ describe('UmamiLogger', () => {
           payload: expect.objectContaining({
             data: { name: 'John', plan: 'premium' },
           }),
+          type: 'identify',
         })
       );
     });
@@ -391,6 +433,54 @@ describe('UmamiLogger', () => {
 
       expect(umami.getSessionId()).toBeUndefined();
       expect(umami.getSessionData()).toBeUndefined();
+    });
+  });
+
+  describe('Distinct ID', () => {
+    beforeEach(() => {
+      umami.initialize({ baseUrl: 'https://umami.is', websiteId: 'test-website-id' });
+      mockAxiosPost.mockResolvedValue({ data: {} });
+    });
+
+    it('should include distinct ID in page view payloads', async () => {
+      umami.setDistinctId('user-123');
+      await umami.trackPageView();
+
+      expect(mockAxiosPost).toHaveBeenCalledWith(
+        'https://umami.is/api/send',
+        expect.objectContaining({
+          payload: expect.objectContaining({
+            id: 'user-123',
+            website: 'test-website-id',
+          }),
+          type: 'event',
+        })
+      );
+    });
+
+    it('should include distinct ID in event payloads', async () => {
+      umami.setDistinctId('user-456');
+      await umami.logEvent('click', { buttonId: 'btn' });
+
+      expect(mockAxiosPost).toHaveBeenCalledWith(
+        'https://umami.is/api/send',
+        expect.objectContaining({
+          payload: expect.objectContaining({
+            id: 'user-456',
+            name: 'click',
+          }),
+          type: 'event',
+        })
+      );
+    });
+
+    it('should be clearable via clearIdentity', async () => {
+      umami.setDistinctId('user-789');
+      umami.clearIdentity();
+      await umami.trackPageView();
+
+      const callArg = mockAxiosPost.mock.calls[0][1] as { payload: UmamiPayload };
+      expect(callArg.payload.id).toBeUndefined();
     });
   });
 
@@ -441,6 +531,15 @@ describe('UmamiLogger', () => {
         tag: 'initial-tag',
       });
       umami.clearTag();
+
+      await umami.trackPageView();
+
+      const callArg = mockAxiosPost.mock.calls[0][1] as { payload: UmamiPayload };
+      expect(callArg.payload.tag).toBeUndefined();
+    });
+
+    it('should not include tag when none is configured', async () => {
+      umami.initialize({ baseUrl: 'https://umami.is', websiteId: 'test-id' });
 
       await umami.trackPageView();
 

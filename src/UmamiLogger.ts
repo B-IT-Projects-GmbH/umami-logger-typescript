@@ -104,6 +104,16 @@ class UmamiLogger {
     }
 
     /**
+     * Set a distinct ID to include in all subsequent payloads.
+     * Sets the session ID without sending an identify event.
+     *
+     * @param id - Unique identifier for the user
+     */
+    setDistinctId(id: string): void {
+        this.sessionId = id;
+    }
+
+    /**
      * Check if tracking should be blocked.
      * Returns true if tracking should NOT occur.
      */
@@ -175,7 +185,7 @@ class UmamiLogger {
             payload.tag = this.config.tag;
         }
 
-        // Add session ID if set via identify
+        // Add session ID if set via identify or setDistinctId
         if (this.sessionId) {
             payload.id = this.sessionId;
         }
@@ -187,11 +197,17 @@ class UmamiLogger {
      * Track a page view.
      *
      * @param overrideUrl - Optional URL to override the default
+     * @param tag - Optional tag override for this page view
      */
-    async trackPageView(overrideUrl?: string): Promise<UmamiResponse | void> {
+    async trackPageView(overrideUrl?: string, tag?: string): Promise<UmamiResponse | void> {
         if (this.isTrackingBlocked()) return;
 
         const payload = this.buildBasePayload(overrideUrl);
+
+        // Per-call tag override
+        if (tag) {
+            payload.tag = tag;
+        }
 
         // Include session data if set
         if (this.sessionData) {
@@ -252,14 +268,20 @@ class UmamiLogger {
      *
      * @param eventName - Name of the event
      * @param eventData - Optional data to attach to the event
+     * @param tag - Optional tag override for this event
      */
-    async logEvent(eventName: string, eventData: EventData = {}): Promise<UmamiResponse | void> {
+    async logEvent(eventName: string, eventData: EventData = {}, tag?: string): Promise<UmamiResponse | void> {
         if (!this.config || !eventName) return;
         if (this.isTrackingBlocked()) return;
 
         const payload = this.buildBasePayload();
         payload.name = eventName;
         payload.data = eventData;
+
+        // Per-call tag override
+        if (tag) {
+            payload.tag = tag;
+        }
 
         return this.sendData({ payload, type: 'event' });
     }
@@ -328,7 +350,7 @@ class UmamiLogger {
             payload.data = this.sessionData;
         }
 
-        return this.sendData({ payload, type: 'event' });
+        return this.sendData({ payload, type: 'identify' });
     }
 
     /**
